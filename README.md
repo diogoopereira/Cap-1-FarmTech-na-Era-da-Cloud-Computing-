@@ -70,7 +70,7 @@ As principais bibliotecas utilizadas são:
    ```
 4. **Execute o Jupyter Notebook**:
    ```bash
-   jupyter notebook FarmTech_ML_Project.ipynb
+   jupyter notebook DiogoPereira_rm568326__pbl_fase4.ipynb
    ```
 5. No navegador, execute as células sequencialmente para visualizar a análise exploratória, a clusterização e os resultados dos algoritmos preditivos.
 
