@@ -7,7 +7,7 @@
 <br>
 
 # Nome do projeto
-- <a href="https://www.linkedin.com/company/inova-fusca">FarmTech-na-Era-da-Cloud-Computing</a>
+- <h1>FarmTech-na-Era-da-Cloud-Computing</h1>
 
 ## Nome do grupo
 
