@@ -33,7 +33,6 @@ Durante esta fase (Fase 5), o projeto foca em:
 1. **Análise Exploratória de Dados (EDA):** Compreensão da correlação entre o clima e o rendimento da safra.
 2. **Clusterização e Detecção de Outliers:** Agrupamento de perfis climáticos similares utilizando *K-Means* e identificação de anomalias com *Isolation Forest*.
 3. **Modelagem Preditiva:** Criação e avaliação de cinco diferentes algoritmos de regressão (Regressão Múltipla Linear, Árvore de Decisão, Random Forest, Gradient Boosting e SVR) para estimar o rendimento das culturas, sendo avaliados por métricas como RMSE, MAE e R².
-4. **Computação em Nuvem (AWS):** Estimativa de custos para hospedagem da solução na AWS, comparando as regiões de São Paulo e Virgínia do Norte.
 
 
 ## 📁 Estrutura de pastas
@@ -76,113 +75,99 @@ As principais bibliotecas utilizadas são:
 5. No navegador, execute as células sequencialmente para visualizar a análise exploratória, a clusterização e os resultados dos algoritmos preditivos.
 
 
-## ☁️ Entrega 2 - Computação em Nuvem (AWS)
+## 🚀 Ir Além — Sistema de Coleta e Comunicação de Dados Usando ESP32 Integrado ao Wi-Fi
 
 ### Objetivo
 
-Estimar os custos para hospedar uma API na AWS que receberá dados dos sensores e executará o modelo de Machine Learning. Comparação entre as regiões de **São Paulo (sa-east-1)** e **Virgínia do Norte (us-east-1)** com instâncias **On-Demand (100%)**.
+Desenvolver um sistema IoT utilizando um ESP32 com comunicação Wi-Fi para coleta de dados ambientais via sensores, enviando as leituras em tempo real para o broker MQTT da plataforma **Ubidots**, onde os dados são visualizados em um dashboard interativo.
 
-### Requisitos da Máquina
+### Sensores Utilizados e Justificativa
 
-| Recurso | Especificação |
+| Sensor | Grandeza Medida | Justificativa |
+|---|---|---|
+| **DHT22** | Temperatura e Umidade do Ar | Monitorar as condições climáticas é essencial para a agricultura. A temperatura e a umidade do ar influenciam diretamente no desenvolvimento das culturas, na propagação de pragas e doenças, e na definição dos períodos ideais de plantio e colheita. |
+| **Sensor de Umidade do Solo (Capacitivo)** | Umidade do Solo | A umidade do solo é o fator mais crítico para a irrigação. Monitorá-la permite otimizar o uso da água, evitando desperdício por irrigação excessiva ou perda de produtividade por falta de água. |
+
+A escolha desses dois sensores está diretamente alinhada às soluções da **FarmTech Solutions**, que busca utilizar dados climáticos e de solo para prever o rendimento das safras e auxiliar na tomada de decisão dos agricultores. Os dados coletados (temperatura, umidade do ar e umidade do solo) são as mesmas variáveis utilizadas no modelo preditivo de Machine Learning desenvolvido nas fases anteriores do projeto.
+
+### Arquitetura do Sistema
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        ESP32 (Wokwi)                            │
+│                                                                 │
+│   ┌───────────┐    ┌──────────────────────┐                     │
+│   │  DHT22    │    │  Sensor Umidade Solo │                     │
+│   │ (GPIO 15) │    │     (GPIO 34)        │                     │
+│   └─────┬─────┘    └──────────┬───────────┘                     │
+│         │                     │                                 │
+│         └──────────┬──────────┘                                 │
+│                    │                                            │
+│              Leitura dos Sensores                               │
+│              (temperatura, umidade ar, umidade solo)            │
+│                    │                                            │
+│              ┌─────▼─────┐                                      │
+│              │   Wi-Fi   │                                      │
+│              └─────┬─────┘                                      │
+└────────────────────┼────────────────────────────────────────────┘
+                     │
+                     │ MQTT (porta 1883)
+                     │ Tópico: /v1.6/devices/esp32-farmtech
+                     │ Payload JSON:
+                     │ {
+                     │   "temperatura": 25.3,
+                     │   "umidade_ar": 60.5,
+                     │   "umidade_solo": 45
+                     │ }
+                     ▼
+          ┌─────────────────────┐
+          │      Ubidots        │
+          │  (Broker MQTT)      │
+          │                     │
+          │  ┌───────────────┐  │
+          │  │   Dashboard   │  │
+          │  │  - Gráficos   │  │
+          │  │  - Histórico  │  │
+          │  │  - Alertas    │  │
+          │  └───────────────┘  │
+          └─────────────────────┘
+```
+
+### Tecnologias Utilizadas
+
+| Tecnologia | Uso |
 |---|---|
-| Sistema Operacional | Linux |
-| vCPUs | 2 |
-| Memória RAM | 1 GiB |
-| Rede | Até 5 Gigabit |
-| Armazenamento | 50 GB (HD) |
+| **ESP32** | Microcontrolador com Wi-Fi integrado |
+| **C/C++ (Arduino)** | Linguagem de programação do firmware |
+| **Wi-Fi (IEEE 802.11)** | Comunicação sem fio |
+| **MQTT** | Protocolo de mensageria leve para IoT |
+| **Ubidots** | Plataforma IoT para recebimento e visualização dos dados |
+| **Wokwi** | Simulador online para prototipagem do circuito |
 
-### Instâncias EC2 compatíveis
+### Fluxo de Funcionamento
 
-Três tipos de instância atendem exatamente às especificações:
+1. O ESP32 conecta-se à rede Wi-Fi configurada.
+2. Estabelece conexão com o broker MQTT da Ubidots usando token de autenticação.
+3. A cada **5 segundos**, realiza a leitura dos sensores:
+   - **DHT22**: temperatura (°C) e umidade relativa do ar (%).
+   - **Sensor capacitivo de solo**: umidade do solo (0-100%), mapeada a partir da leitura analógica (0-4095).
+4. Os dados são formatados em JSON e publicados no tópico MQTT `/v1.6/devices/esp32-farmtech`.
+5. A plataforma Ubidots recebe os dados e os exibe em um dashboard com gráficos em tempo real.
 
-| Instância | vCPUs | Memória | Rede | Processador | Arquitetura |
-|---|---|---|---|---|---|
-| t4g.micro | 2 | 1 GiB | Até 5 Gbps | AWS Graviton2 | ARM64 |
-| t3a.micro | 2 | 1 GiB | Até 5 Gbps | AMD EPYC | x86_64 |
-| t3.micro | 2 | 1 GiB | Até 5 Gbps | Intel Skylake | x86_64 |
+### Código-Fonte
 
-### Comparação de Custos - EC2 (On-Demand, Linux)
+O código do firmware está disponível em [`src/sketch.ino`](src/sketch.ino).
 
-Valores mensais baseados em **730 horas/mês** (padrão AWS).
+### Como Simular no Wokwi
 
-**Virgínia do Norte (us-east-1)**
-
-| Instância | Custo/Hora | Custo Mensal |
-|---|---|---|
-| t4g.micro | $0,0084 | ~$6,13 |
-| t3a.micro | $0,0094 | ~$6,86 |
-| t3.micro | $0,0104 | ~$7,59 |
-
-**São Paulo (sa-east-1)**
-
-| Instância | Custo/Hora | Custo Mensal |
-|---|---|---|
-| t4g.micro | $0,0134 | ~$9,78 |
-| t3a.micro | $0,0151 | ~$11,02 |
-| t3.micro | $0,0111 | ~$8,10 |
-
-> A região de São Paulo é em média **30% a 60% mais cara** que a Virgínia do Norte.
-
-### Comparação de Custos - Armazenamento EBS (50 GB)
-
-| Região | Tipo | Preço por GB/mês | Custo 50 GB/mês |
-|---|---|---|---|
-| us-east-1 (Virgínia) | Magnetic (Standard) | $0,05 | $2,50 |
-| sa-east-1 (São Paulo) | Magnetic (Standard) | $0,12 | $6,00 |
-
-### Custo Total Mensal (EC2 + EBS 50 GB)
-
-| Região | Instância | EC2/mês | EBS/mês | **Total/mês** |
-|---|---|---|---|---|
-| us-east-1 | t4g.micro | $6,13 | $2,50 | **$8,63** |
-| us-east-1 | t3a.micro | $6,86 | $2,50 | **$9,36** |
-| us-east-1 | t3.micro | $7,59 | $2,50 | **$10,09** |
-| sa-east-1 | t3.micro | $8,10 | $6,00 | **$14,10** |
-| sa-east-1 | t4g.micro | $9,78 | $6,00 | **$15,78** |
-| sa-east-1 | t3a.micro | $11,02 | $6,00 | **$17,02** |
-
-**Solução mais barata:** instância **t4g.micro** na região **us-east-1 (Virgínia do Norte)** com 50 GB EBS Magnetic, totalizando **$8,63/mês**.
-
-### Escolha da Região - Justificativa
-
-> **Cenário proposto:** acesso rápido aos dados dos sensores e restrições legais para armazenamento no exterior.
-
-**Região escolhida: São Paulo (sa-east-1)**
-
-Apesar de ser mais cara, a região de São Paulo é a escolha adequada pelos seguintes motivos:
-
-**1. Conformidade Legal (LGPD)**
-
-A Lei Geral de Proteção de Dados (Lei nº 13.709/2018) estabelece regras para o tratamento de dados no Brasil. Quando há restrições legais para armazenamento no exterior, manter a infraestrutura em território nacional é obrigatório. A região sa-east-1 possui data centers em São Paulo, garantindo conformidade com a legislação vigente.
-
-**2. Latência e Acesso Rápido aos Dados**
-
-A fazenda e seus sensores estão no Brasil. A região de São Paulo proporciona:
-- **Menor latência:** ~10-30ms vs ~120-180ms para Virgínia do Norte
-- **Maior velocidade** no envio e recebimento de dados em tempo real
-- **Maior confiabilidade** da conexão, com menos saltos de rede
-
-**3. Análise Custo-Benefício**
-
-| Fator | Virgínia do Norte | São Paulo |
-|---|---|---|
-| Custo mensal (mais barato) | $8,63 | $14,10 |
-| Diferença mensal | - | +$5,47 |
-| Latência estimada | ~120-180ms | ~10-30ms |
-| Conformidade LGPD | Não atende | Atende |
-| Proximidade dos sensores | Distante | Próximo |
-
-A diferença de **~$5,47/mês** é um valor pequeno frente aos benefícios de conformidade legal e desempenho. Em um cenário agrícola onde decisões em tempo real impactam a produtividade de 200 hectares, a latência reduzida e a segurança jurídica justificam o investimento adicional.
-
-### Configuração Recomendada
-
-- **Região:** São Paulo (sa-east-1)
-- **Instância:** t3.micro (2 vCPUs, 1 GiB RAM, até 5 Gbps)
-- **Armazenamento:** 50 GB EBS Magnetic (Standard)
-- **Custo mensal estimado:** ~$14,10/mês
-
-> Fontes: [AWS EC2 On-Demand Pricing](https://aws.amazon.com/ec2/pricing/on-demand/) | [AWS EBS Pricing](https://aws.amazon.com/ebs/pricing/) | [EC2 Instance Types](https://instances.vantage.sh/)
+1. Acesse [wokwi.com](https://wokwi.com/).
+2. Crie um novo projeto com **ESP32**.
+3. Adicione os componentes:
+   - **DHT22** conectado ao GPIO 15
+   - **Potenciômetro** (simulando sensor de umidade do solo) conectado ao GPIO 34
+4. Copie o código de `src/sketch.ino` para o editor.
+5. Adicione as bibliotecas `DHT sensor library`, `PubSubClient` e `WiFi` no `libraries.txt`.
+6. Execute a simulação.
 
 ---
 
