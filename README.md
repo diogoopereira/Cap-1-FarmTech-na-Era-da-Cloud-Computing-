@@ -223,8 +223,8 @@ O código do firmware está disponível em [`src/sketch.ino`](src/sketch.ino).
 4. Copie o código de `src/sketch.ino` para o editor.
 5. Adicione as bibliotecas `DHT sensor library`, `PubSubClient` e `WiFi` no `libraries.txt`.
 6. Execute a simulação.
+7. Verifique o dashboard disponível em: [https://stem.ubidots.com/app/dashboards/public/dashboard/0VAB03JPGWwuHLjdA7VZ8xRuI9MTc6qN?navbar=true&contextbar=false&layersBar=false]
 
----
 
 ## 📋 Licença
 
