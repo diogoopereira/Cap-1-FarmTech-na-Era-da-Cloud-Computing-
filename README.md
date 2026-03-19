@@ -75,7 +75,7 @@ As principais bibliotecas utilizadas são:
 5. No navegador, execute as células sequencialmente para visualizar a análise exploratória, a clusterização e os resultados dos algoritmos preditivos.
 
 
-## 🎯 Metas da Entrega 2: Estimativa de Custos na AWS
+## Entrega 2: Estimativa de Custos na AWS
 
 ### 1. Comparativo de Custos: Virgínia do Norte (EUA) vs. São Paulo (BR)
 
@@ -100,7 +100,7 @@ Utilizando a Calculadora de Preços da AWS, obtivemos o seguinte comparativo men
 **Qual a solução mais barata?**
 Considerando estritamente o fator financeiro, a solução mais barata para as configurações solicitadas é hospedar a infraestrutura na região **US East (N. Virginia)**, custando praticamente a metade do valor cobrado na região brasileira.
 
-> 🖼️ **![WhatsApp Image 2026-03-18 at 15 54 14](https://github.com/user-attachments/assets/7d7e41e7-456c-40a9-a0ed-aa0f71adc821)
+>  **![WhatsApp Image 2026-03-18 at 15 54 14](https://github.com/user-attachments/assets/7d7e41e7-456c-40a9-a0ed-aa0f71adc821)
 **
 
 
@@ -121,7 +121,7 @@ Diante deste cenário, a opção escolhida é a região **South America (São Pa
 
 Abaixo, apresentamos o vídeo demonstrando o uso da calculadora da AWS e a justificativa das escolhas arquiteturais detalhadas acima:
 
-🔗 **[Insira aqui o link do vídeo "Não Listado" do YouTube]**
+🔗 **[ https://youtu.be/HPIs9ebN3Zc ]**
 
 
 ## 🚀 Ir Além — Sistema de Coleta e Comunicação de Dados Usando ESP32 Integrado ao Wi-Fi
