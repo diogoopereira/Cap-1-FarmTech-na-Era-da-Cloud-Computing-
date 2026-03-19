@@ -75,6 +75,55 @@ As principais bibliotecas utilizadas são:
 5. No navegador, execute as células sequencialmente para visualizar a análise exploratória, a clusterização e os resultados dos algoritmos preditivos.
 
 
+## 🎯 Metas da Entrega 2: Estimativa de Custos na AWS
+
+### 1. Comparativo de Custos: Virgínia do Norte (EUA) vs. São Paulo (BR)
+
+O objetivo desta etapa foi estimar os custos (modelo *On-Demand* com 100% de utilização) de uma instância Amazon EC2 Linux para hospedar uma API de dados de sensores e executar modelos de Machine Learning.
+
+**Configurações da Máquina Utilizada na Estimativa:**
+* **Sistema Operacional:** Linux
+* **vCPUs:** 2
+* **Memória:** 1 GiB
+* **Rede:** Até 5 Gigabit
+* **Armazenamento (EBS):** 50 GB 
+
+Utilizando a Calculadora de Preços da AWS, obtivemos o seguinte comparativo mensal:
+
+| Região AWS | Custo Mensal Estimado (USD) |
+| :--- | :--- |
+| **US East (N. Virginia)** | **$ 8,63** |
+| **US East (Ohio)** | **$ 8,63** |
+| **South America (São Paulo)** | **$ 15,78** |
+
+
+**Qual a solução mais barata?**
+Considerando estritamente o fator financeiro, a solução mais barata para as configurações solicitadas é hospedar a infraestrutura na região **US East (N. Virginia)**, custando praticamente a metade do valor cobrado na região brasileira.
+
+> 🖼️ **![WhatsApp Image 2026-03-18 at 15 54 14](https://github.com/user-attachments/assets/7d7e41e7-456c-40a9-a0ed-aa0f71adc821)
+**
+
+
+### 2. Escolha de Arquitetura com Restrições (Latência e Legislação)
+
+**Cenário:** Necessidade de acesso rápido aos dados (baixa latência) e restrições legais para armazenamento de dados no exterior.
+
+**Qual opção escolher e justificativa:**
+Diante deste cenário, a opção escolhida é a região **South America (São Paulo)**, mesmo com o custo mensal superior ($15,78 contra$ 8,63). 
+
+**Justificativa:**
+1.  **Baixa Latência (Acesso Rápido):** A proximidade física dos servidores (localizados no Brasil) com os sensores e os usuários finais da aplicação garante um tempo de resposta (latência) significativamente menor durante a transmissão dos dados, atendendo ao requisito de "acessar rapidamente".
+2.  **Soberania de Dados (Restrição Legal):** Ao manter a instância e o volume EBS na região de São Paulo, garantimos que os dados gerados e processados não ultrapassem as fronteiras do país. Isso assegura a conformidade com as legislações vigentes de proteção e armazenamento de dados locais, evitando sanções legais decorrentes do envio de informações restritas para o exterior.
+
+---
+
+### 📹 Demonstração em Vídeo
+
+Abaixo, apresentamos o vídeo demonstrando o uso da calculadora da AWS e a justificativa das escolhas arquiteturais detalhadas acima:
+
+🔗 **[Insira aqui o link do vídeo "Não Listado" do YouTube]**
+
+
 ## 🚀 Ir Além — Sistema de Coleta e Comunicação de Dados Usando ESP32 Integrado ao Wi-Fi
 
 ### Objetivo
