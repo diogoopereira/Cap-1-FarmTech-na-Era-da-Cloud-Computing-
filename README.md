@@ -74,6 +74,12 @@ As principais bibliotecas utilizadas são:
    ```
 5. No navegador, execute as células sequencialmente para visualizar a análise exploratória, a clusterização e os resultados dos algoritmos preditivos.
 
+### 📹 Demonstração em Vídeo
+
+Abaixo, apresentamos o vídeo demonstrando a análise exploratória feita e os algoritmos treinados:
+
+🔗 **[https://youtu.be/NQDr2j4NdHI]**
+
 
 ## Entrega 2: Estimativa de Custos na AWS
 
